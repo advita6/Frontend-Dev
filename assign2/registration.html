@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Registration Form</title>
+</head>
+<body>
+
+    <h1>Course Registration Form</h1>
+
+    <form action="#" method="post">
+        <fieldset>
+            <legend>Personal Information</legend>
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </fieldset>
+
+        <br>
+
+        <fieldset>
+            <legend>Course Selection</legend>
+            <label for="course">Choose a course:</label>
+            <select id="course" name="course" required>
+                <option value="">--Select a course--</option>
+                <option value="html-css">HTML & CSS</option>
+                <option value="javascript">JavaScript</option>
+                <option value="python">Python Programming</option>
+                <option value="machine-learning">Machine Learning</option>
+            </select>
+        </fieldset>
+
+        <br>
+
+        <input type="submit" value="Register">
+    </form>
+
+    <br><br>
+
+    <h2>Available Course Schedules</h2>
+    <table border="1" cellpadding="8" cellspacing="0">
+        <tr>
+            <th>Course</th>
+            <th>Day</th>
+            <th>Time</th>
+            <th>Instructor</th>
+        </tr>
+        <tr>
+            <td>HTML & CSS</td>
+            <td>Monday</td>
+            <td>10:00 AM - 12:00 PM</td>
+            <td>John Doe</td>
+        </tr>
+        <tr>
+            <td>JavaScript</td>
+            <td>Wednesday</td>
+            <td>2:00 PM - 4:00 PM</td>
+            <td>Jane Smith</td>
+        </tr>
+        <tr>
+            <td>Python Programming</td>
+            <td>Friday</td>
+            <td>11:00 AM - 1:00 PM</td>
+            <td>Emily Johnson</td>
+        </tr>
+        <tr>
+            <td>Machine Learning</td>
+            <td>Saturday</td>
+            <td>3:00 PM - 5:00 PM</td>
+            <td>Michael Brown</td>
+        </tr>
+    </table>
+
+</body>
+</html>
