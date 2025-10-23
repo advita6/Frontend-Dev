@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Gallery</title>
+<style>
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:20px;}
+.card{background:#eee;padding:20px;text-align:center;transition:0.3s;display:flex;flex-direction:column;justify-content:center;}
+.card:hover{transform:scale(1.05);}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="card">Product 1 - $10</div><div class="card">Product 2 - $15</div>
+  <div class="card">Product 3 - $20</div><div class="card">Product 4 - $25</div>
+  <div class="card">Product 5 - $30</div><div class="card">Product 6 - $35</div>
+  <div class="card">Product 7 - $40</div><div class="card">Product 8 - $45</div>
+</div>
+</body>
+</html>

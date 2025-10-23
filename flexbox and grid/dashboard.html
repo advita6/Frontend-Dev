@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+<style>
+body{margin:0;display:grid;grid-template-columns:200px 1fr;grid-template-rows:auto 1fr;grid-template-areas:
+"header header"
+"sidebar main";height:100vh;}
+header{grid-area:header;background:#333;color:#fff;padding:20px;text-align:center;}
+aside{grid-area:sidebar;background:#222;color:#fff;padding:20px;}
+main{grid-area:main;display:grid;grid-template-columns:repeat(2,1fr);gap:20px;padding:20px;}
+.box{background:#eee;padding:40px;transition:.3s;}
+.box:hover{transform:scale(1.05);box-shadow:0 0 10px rgba(0,0,0,0.3);}
+.box:first-child{grid-column:span 2;}
+</style>
+</head>
+<body>
+<header>Dashboard</header>
+<aside>Menu<br>Profile<br>Settings</aside>
+<main>
+<div class="box">Box 1</div><div class="box">Box 2</div>
+<div class="box">Box 3</div><div class="box">Box 4</div>
+</main>
+</body>
+</html>
