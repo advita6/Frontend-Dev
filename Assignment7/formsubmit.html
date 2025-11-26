@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{font-family:Arial;padding:20px;}
+.error{color:red;font-size:13px;}
+</style>
+</head>
+<body>
+
+<form id="f">
+<input id="name" placeholder="Name"><div id="e1" class="error"></div>
+<input id="email" placeholder="Email"><div id="e2" class="error"></div>
+<input id="pass" placeholder="Password"><div id="e3" class="error"></div>
+<button>Submit</button>
+</form>
+
+<div id="msg"></div>
+
+<script>
+const f=document.getElementById("f");
+const n=document.getElementById("name");
+const e=document.getElementById("email");
+const p=document.getElementById("pass");
+const e1=document.getElementById("e1");
+const e2=document.getElementById("e2");
+const e3=document.getElementById("e3");
+const msg=document.getElementById("msg");
+
+function validate(){
+    let ok=true;
+    if(n.value.trim()===""){e1.textContent="Required";ok=false;} else e1.textContent="";
+    if(!e.value.includes("@")){e2.textContent="Invalid";ok=false;} else e2.textContent="";
+    if(p.value.length<6){e3.textContent="Min 6 chars";ok=false;} else e3.textContent="";
+    return ok;
+}
+
+n.oninput=validate;
+e.oninput=validate;
+p.oninput=validate;
+
+f.onsubmit=(ev)=>{
+    if(!validate()){
+        ev.preventDefault();
+        return;
+    }
+    ev.preventDefault();
+    msg.textContent="Form Submitted Successfully";
+};
+</script>
+
+</body>
+</html>

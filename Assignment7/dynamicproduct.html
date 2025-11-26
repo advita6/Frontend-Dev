@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{font-family:Arial;padding:20px;}
+input{padding:8px;width:250px;}
+button{padding:6px 10px;}
+ul{list-style:none;padding:0;margin-top:20px;width:400px;}
+li{padding:8px;border:1px solid #ccc;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+.edit-input{width:100%;padding:6px;}
+.actions{display:flex;gap:6px;}
+</style>
+</head>
+<body>
+
+<input id="pInput" placeholder="Add product"><button id="addBtn">Add</button>
+<ul id="list"></ul>
+
+<script>
+const pInput=document.getElementById("pInput");
+const addBtn=document.getElementById("addBtn");
+const list=document.getElementById("list");
+
+function createItem(text){
+    const li=document.createElement("li");
+    li.setAttribute("data-editing","false");
+    const label=document.createElement("span");
+    label.className="label";
+    label.textContent=text;
+    const act=document.createElement("div");
+    act.className="actions";
+    const e=document.createElement("button");
+    e.className="edit";
+    e.textContent="Edit";
+    const d=document.createElement("button");
+    d.className="delete";
+    d.textContent="Delete";
+    act.appendChild(e);
+    act.appendChild(d);
+    li.appendChild(label);
+    li.appendChild(act);
+    return li;
+}
+
+addBtn.onclick=()=>{
+    const val=pInput.value.trim();
+    if(!val)return;
+    list.appendChild(createItem(val));
+    pInput.value="";
+};
+
+list.onclick=(e)=>{
+    const t=e.target;
+    const li=t.closest("li");
+    if(!li)return;
+
+    if(t.classList.contains("delete")){
+        li.remove();
+    }
+
+    if(t.classList.contains("edit")){
+        if(li.dataset.editing==="true")return;
+        li.dataset.editing="true";
+        const old=li.querySelector(".label").textContent;
+        const input=document.createElement("input");
+        input.className="edit-input";
+        input.value=old;
+        li.replaceChild(input,li.querySelector(".label"));
+        input.focus();
+
+        input.onkeydown=(ev)=>{
+            if(ev.key==="Enter") save(li,input.value);
+        };
+
+        li._input=input;
+        li._old=old;
+    }
+};
+
+document.addEventListener("click",(e)=>{
+    const editing=document.querySelector('li[data-editing="true"]');
+    if(!editing)return;
+    if(e.target===editing._input)return;
+    save(editing,editing._input.value);
+});
+
+function save(li,newVal){
+    const val=newVal.trim()||li._old;
+    const span=document.createElement("span");
+    span.className="label";
+    span.textContent=val;
+    li.replaceChild(span,li._input);
+    li.dataset.editing="false";
+}
+</script>
+</body>
+</html>

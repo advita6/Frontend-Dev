@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<style>
+.q{font-size:20px;margin:15px 0;cursor:pointer;}
+.a{display:none;margin-left:20px;color:#444;}
+.highlight{background:#e6f0ff;}
+</style>
+</head>
+<body>
+
+<div class="faq">
+<div class="q">What is JavaScript?</div>
+<div class="a"><input class="ans" placeholder="Type here..."></div>
+
+<div class="q">What is jQuery?</div>
+<div class="a"><input class="ans" placeholder="Your response"></div>
+</div>
+
+<script>
+$(".q").click(function(){
+    $(this).next().toggle();
+});
+
+$(".q").hover(function(){
+    $(this).css("color","blue");
+},function(){
+    $(this).css("color","black");
+});
+
+$(".q").dblclick(function(){
+    $(".a").hide();
+});
+
+$(".ans").focus(function(){
+    $(this).parent().prev().addClass("highlight");
+});
+
+$(".ans").blur(function(){
+    $(this).parent().prev().removeClass("highlight");
+});
+</script>
+
+</body>
+</html>

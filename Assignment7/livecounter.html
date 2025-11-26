@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{font-family:Arial;padding:20px;}
+#counter{font-size:18px;margin-top:10px;}
+</style>
+</head>
+<body>
+
+<textarea id="txt" rows="5" cols="40" maxlength="100"></textarea>
+<div id="counter">100 characters left</div>
+<button id="reset">Reset</button>
+
+<script>
+const txt=document.getElementById("txt");
+const counter=document.getElementById("counter");
+const reset=document.getElementById("reset");
+
+txt.addEventListener("input",()=>{
+    const left=100-txt.value.length;
+    counter.textContent=left+" characters left";
+    counter.style.color=left<=0?"red":left<=20?"orange":"black";
+});
+
+txt.addEventListener("keypress",(e)=>{
+    if(txt.value.length>=100)e.preventDefault();
+});
+
+reset.onclick=()=>{
+    txt.value="";
+    counter.textContent="100 characters left";
+    counter.style.color="black";
+};
+</script>
+</body>
+</html>

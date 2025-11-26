@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<style>
+.prod{padding:10px;border:1px solid #ddd;margin:10px;width:200px;cursor:pointer;position:relative;}
+.highlight{background:#ffe8a6;}
+.selected{color:red;}
+.details{display:none;font-size:13px;color:#444;}
+[data-discount="true"]{border-color:green;}
+</style>
+</head>
+<body>
+
+<div class="prod" data-stock="yes" data-discount="true">
+Product 1 <span class="fav">♥</span>
+<div class="details">Details: 20% off</div>
+</div>
+
+<div class="prod" data-stock="no">
+Product 2 <span class="fav">♥</span>
+<div class="details">Details: Out of stock</div>
+</div>
+
+<script>
+$(".prod").click(function(e){
+    if($(this).data("stock")==="no"){alert("Out of stock");return;}
+    $(".prod").removeClass("highlight");
+    $(this).addClass("highlight");
+});
+
+$(".prod").hover(function(){
+    $(this).find(".details").show();
+},function(){
+    $(this).find(".details").hide();
+});
+
+$(".fav").click(function(e){
+    e.stopPropagation();
+    $(this).toggleClass("selected");
+});
+</script>
+
+</body>
+</html>

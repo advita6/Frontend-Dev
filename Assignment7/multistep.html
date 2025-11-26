@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{font-family:Arial;padding:20px;}
+.step{display:none;}
+.active{display:block;}
+</style>
+</head>
+<body>
+
+<div class="step active" id="s1">
+<input id="name" placeholder="Name"><br>
+<button id="n1">Next</button>
+</div>
+
+<div class="step" id="s2">
+<input id="email" placeholder="Email"><br>
+<button id="b2">Back</button>
+<button id="n2">Next</button>
+</div>
+
+<div class="step" id="s3">
+<input id="pass" placeholder="Password"><br>
+<button id="b3">Back</button>
+<button id="done">Finish</button>
+</div>
+
+<div id="summary"></div>
+
+<script>
+const s1=document.getElementById("s1");
+const s2=document.getElementById("s2");
+const s3=document.getElementById("s3");
+const sum=document.getElementById("summary");
+
+document.getElementById("n1").onclick=()=>{
+    if(document.getElementById("name").value.trim()==="")return;
+    s1.classList.remove("active");
+    s2.classList.add("active");
+};
+
+document.getElementById("b2").onclick=()=>{
+    s2.classList.remove("active");
+    s1.classList.add("active");
+};
+
+document.getElementById("n2").onclick=()=>{
+    const email=document.getElementById("email").value.trim();
+    if(!email.includes("@"))return;
+    s2.classList.remove("active");
+    s3.classList.add("active");
+};
+
+document.getElementById("b3").onclick=()=>{
+    s3.classList.remove("active");
+    s2.classList.add("active");
+};
+
+document.getElementById("done").onclick=()=>{
+    if(document.getElementById("pass").value.length<6)return;
+    s3.classList.remove("active");
+    sum.textContent=
+      "Name: "+document.getElementById("name").value+
+      " | Email: "+document.getElementById("email").value+
+      " | Password: "+document.getElementById("pass").value;
+};
+</script>
+
+</body>
+</html>
