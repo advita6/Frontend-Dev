@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Q1 Live Product Search</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; }
+    #searchContainer { margin-bottom: 20px; }
+    #loading { display: none; font-size: 14px; margin-top: 4px; }
+    #results { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+    .product { border: 1px solid #ddd; padding: 10px; border-radius: 6px; display: flex; gap: 10px; align-items: center; }
+    .product img { width: 80px; height: 80px; object-fit: cover; border-radius: 4px; }
+    .product-info { display: flex; flex-direction: column; }
+    .name { font-weight: 600; margin-bottom: 4px; }
+    .price { color: #007b00; }
+    #noResults { margin-top: 10px; font-style: italic; }
+  </style>
+</head>
+<body>
+  <h1>Live Product Search</h1>
+  <div id="searchContainer">
+    <input type="text" id="searchBox" placeholder="Search products..." autocomplete="off">
+    <div id="loading">Loading...</div>
+  </div>
+  <div id="results"></div>
+  <div id="noResults" style="display:none;">No products found</div>
+
+  <script>
+    var timerId = null
+    function renderResults(items) {
+      var results = $("#results")
+      var noResults = $("#noResults")
+      results.empty()
+      if (!items || items.length === 0) {
+        noResults.show()
+        return
+      }
+      noResults.hide()
+      items.forEach(function (p) {
+        var card = $("<div>").addClass("product")
+        var img = $("<img>").attr("src", p.image)
+        var info = $("<div>").addClass("product-info")
+        var name = $("<div>").addClass("name").text(p.name)
+        var price = $("<div>").addClass("price").text("₹" + p.price)
+        info.append(name, price)
+        card.append(img, info)
+        results.append(card)
+      })
+    }
+    function searchProducts(query) {
+      $("#loading").show()
+      $.ajax({
+        url: "http://localhost:3001/products",
+        method: "GET",
+        data: { q: query },
+        success: function (data) {
+          $("#loading").hide()
+          renderResults(data)
+        },
+        error: function () {
+          $("#loading").hide()
+          $("#results").empty()
+          $("#noResults").text("Error loading products").show()
+        }
+      })
+    }
+    $(document).ready(function () {
+      searchProducts("")
+      $("#searchBox").on("keyup", function () {
+        var value = $(this).val()
+        if (timerId) {
+          clearTimeout(timerId)
+        }
+        timerId = setTimeout(function () {
+          searchProducts(value)
+        }, 300)
+      })
+    })
+  </script>
+</body>
+</html>

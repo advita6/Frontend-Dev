@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Q3 Task Manager</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: 40px auto; }
+    #filterBar { margin-bottom: 16px; }
+    ul { list-style: none; padding: 0; }
+    li { border: 1px solid #ddd; padding: 8px 10px; border-radius: 4px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+    .left { display: flex; align-items: center; gap: 8px; }
+    .title { font-weight: 500; }
+    .priority { font-size: 12px; padding: 2px 6px; border-radius: 4px; border: 1px solid #ccc; }
+    .priority-High { border-color: red; color: red; }
+    .priority-Medium { border-color: orange; color: orange; }
+    .priority-Low { border-color: green; color: green; }
+    .completed { text-decoration: line-through; opacity: 0.6; }
+  </style>
+</head>
+<body>
+  <h1>Task Manager</h1>
+  <div id="filterBar">
+    <label for="filterSelect">Filter:</label>
+    <select id="filterSelect">
+      <option value="all">All</option>
+      <option value="Low">Low Priority</option>
+      <option value="Medium">Medium Priority</option>
+      <option value="High">High Priority</option>
+      <option value="Completed">Completed</option>
+    </select>
+  </div>
+  <ul id="taskList"></ul>
+
+  <script>
+    var baseUrl = "http://localhost:3003/tasks"
+    function buildQuery(filter) {
+      if (filter === "Low" || filter === "Medium" || filter === "High") {
+        return { priority: filter }
+      }
+      if (filter === "Completed") {
+        return { completed: true }
+      }
+      return {}
+    }
+    function loadTasks() {
+      var filter = $("#filterSelect").val()
+      var data = buildQuery(filter)
+      $("#taskList").empty()
+      $.ajax({
+        url: baseUrl,
+        method: "GET",
+        data: data,
+        success: function (tasks) {
+          renderTasks(tasks)
+        }
+      })
+    }
+    function renderTasks(tasks) {
+      var list = $("#taskList")
+      list.empty()
+      tasks.forEach(function (t) {
+        var li = $("<li>")
+        var left = $("<div>").addClass("left")
+        var checkbox = $("<input>").attr("type", "checkbox")
+        checkbox.prop("checked", t.completed)
+        checkbox.on("change", function () {
+          toggleCompleted(t, checkbox, li)
+        })
+        var title = $("<span>").addClass("title").text(t.title)
+        if (t.completed) {
+          title.addClass("completed")
+        }
+        var priority = $("<span>").addClass("priority priority-" + t.priority).text(t.priority)
+        left.append(checkbox, title)
+        li.append(left, priority)
+        list.append(li)
+      })
+    }
+    function toggleCompleted(task, checkbox, li) {
+      var newCompleted = checkbox.is(":checked")
+      $.ajax({
+        url: baseUrl + "/" + task.id,
+        method: "PATCH",
+        contentType: "application/json",
+        data: JSON.stringify({ completed: newCompleted }),
+        success: function (updated) {
+          var titleSpan = li.find(".title")
+          if (updated.completed) {
+            titleSpan.addClass("completed")
+          } else {
+            titleSpan.removeClass("completed")
+          }
+        },
+        error: function () {
+          checkbox.prop("checked", !newCompleted)
+        }
+      })
+    }
+    $(document).ready(function () {
+      loadTasks()
+      $("#filterSelect").on("change", loadTasks)
+    })
+  </script>
+</body>
+</html>

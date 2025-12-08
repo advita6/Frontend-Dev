@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Q2 Employee Status Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: 40px auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #f5f5f5; }
+    .status-active { color: green; font-weight: 600; }
+    .status-inactive { color: red; font-weight: 600; }
+    #error { margin-top: 10px; color: red; display: none; }
+  </style>
+</head>
+<body>
+  <h1>Employee Status Dashboard</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Toggle</th>
+      </tr>
+    </thead>
+    <tbody id="employeeBody"></tbody>
+  </table>
+  <div id="error"></div>
+
+  <script>
+    var baseUrl = "http://localhost:3002/employees"
+    function showError(message) {
+      var box = document.getElementById("error")
+      box.textContent = message
+      box.style.display = "block"
+      setTimeout(function () {
+        box.style.display = "none"
+      }, 3000)
+    }
+    function createRow(emp) {
+      var tr = document.createElement("tr")
+      var tdId = document.createElement("td")
+      var tdName = document.createElement("td")
+      var tdStatus = document.createElement("td")
+      var tdToggle = document.createElement("td")
+      tdId.textContent = emp.id
+      tdName.textContent = emp.name
+      var span = document.createElement("span")
+      span.textContent = emp.status
+      span.className = emp.status === "active" ? "status-active" : "status-inactive"
+      tdStatus.appendChild(span)
+      var input = document.createElement("input")
+      input.type = "checkbox"
+      input.checked = emp.status === "active"
+      input.dataset.id = emp.id
+      input.dataset.prevStatus = emp.status
+      input.addEventListener("change", function (e) {
+        var id = e.target.dataset.id
+        var prevStatus = e.target.dataset.prevStatus
+        var newStatus = e.target.checked ? "active" : "inactive"
+        span.textContent = newStatus
+        span.className = newStatus === "active" ? "status-active" : "status-inactive"
+        e.target.dataset.prevStatus = newStatus
+        var xhr = new XMLHttpRequest()
+        xhr.open("PATCH", baseUrl + "/" + id)
+        xhr.setRequestHeader("Content-Type", "application/json")
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            if (xhr.status < 200 || xhr.status >= 300) {
+              span.textContent = prevStatus
+              span.className = prevStatus === "active" ? "status-active" : "status-inactive"
+              e.target.checked = prevStatus === "active"
+              e.target.dataset.prevStatus = prevStatus
+              showError("Failed to update status for employee " + id)
+            }
+          }
+        }
+        xhr.send(JSON.stringify({ status: newStatus }))
+      })
+      tdToggle.appendChild(input)
+      tr.appendChild(tdId)
+      tr.appendChild(tdName)
+      tr.appendChild(tdStatus)
+      tr.appendChild(tdToggle)
+      return tr
+    }
+    function loadEmployees() {
+      var xhr = new XMLHttpRequest()
+      xhr.open("GET", baseUrl)
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            var data = JSON.parse(xhr.responseText)
+            var body = document.getElementById("employeeBody")
+            body.innerHTML = ""
+            data.forEach(function (emp) {
+              body.appendChild(createRow(emp))
+            })
+          } else {
+            showError("Failed to load employees")
+          }
+        }
+      }
+      xhr.send()
+    }
+    document.addEventListener("DOMContentLoaded", loadEmployees)
+  </script>
+</body>
+</html>
